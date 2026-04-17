@@ -31,7 +31,7 @@ async def check_limits(user, user_ip, users_collection, ip_logs_collection):
         ]
 
         if len(attempts) >= 10:
-            raise HTTPException(429, "Limit: 5 quizzes per 24 hours")
+            raise HTTPException(429, "Limit: 10 quizzes per 24 hours")
 
     # -----------------------------
     # 👻 GUEST LIMIT (6/day)
@@ -43,6 +43,6 @@ async def check_limits(user, user_ip, users_collection, ip_logs_collection):
         })
 
         if guest_count >= 6:
-            raise HTTPException(429, "Guest limit: 2 quizzes per day, login for geeting 5 quizzes per day")
+            raise HTTPException(429, "Guest limit: 6 quizzes per day, login for 10 seperate quizzes per day")
 
     return now
