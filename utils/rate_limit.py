@@ -19,7 +19,7 @@ async def check_limits(user, user_ip, users_collection, ip_logs_collection):
         raise HTTPException(429, "Too many requests from this IP (15/day)")
 
     # -----------------------------
-    # 👤 LOGGED USER LIMIT (3/day)
+    # 👤 LOGGED USER LIMIT (10/day)
     # -----------------------------
     print(user ,users_collection)
     if user:
@@ -30,11 +30,11 @@ async def check_limits(user, user_ip, users_collection, ip_logs_collection):
                 if q["time"].tzinfo is None else q["time"])) <= timedelta(hours=24)
         ]
 
-        if len(attempts) >= 5:
+        if len(attempts) >= 10:
             raise HTTPException(429, "Limit: 5 quizzes per 24 hours")
 
     # -----------------------------
-    # 👻 GUEST LIMIT (2/day)
+    # 👻 GUEST LIMIT (6/day)
     # -----------------------------
     else:
         guest_count = await ip_logs_collection.count_documents({
@@ -42,7 +42,7 @@ async def check_limits(user, user_ip, users_collection, ip_logs_collection):
             "time": {"$gte": last_24h}
         })
 
-        if guest_count >= 2:
+        if guest_count >= 6:
             raise HTTPException(429, "Guest limit: 2 quizzes per day, login for geeting 5 quizzes per day")
 
     return now
